@@ -7,7 +7,7 @@ LABEL maintainer="ToshY <github.com/ToshY>"
 RUN <<EOT sh
   set -ex
   apt-get update
-  apt-get install -y wget unzip
+  apt-get install -y wget unzip adduser adduser
   adduser --disabled-password --no-create-home --gecos "" qpdf
   wget --retry-on-host-error --retry-on-http-error=429,500,502,503 -O /usr/local/qpdf.zip "https://github.com/qpdf/qpdf/releases/download/v$APPLICATION_VERSION/qpdf-$APPLICATION_VERSION-bin-linux-x86_64.zip"
   unzip /usr/local/qpdf.zip -d /usr/local/
