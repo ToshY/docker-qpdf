@@ -1,10 +1,9 @@
-<h1 align="center"> 📃️ QPDF Docker </h1>
+<h1 align="center"> 📃️ docker-qpdf </h1>
 
 <div align="center">
-    <a href="https://hub.docker.com/r/t0shy/qpdf-docker/tags"><img src="https://img.shields.io/github/v/release/toshy/qpdf-docker?label=Release&sort=semver" alt="Current version" /></a>
-    <a href="https://hub.docker.com/r/t0shy/qpdf-docker"><img src="https://img.shields.io/badge/Docker%20Hub-t0shy%2Fqpdf--docker-blue" alt="Docker Hub" /></a>
+    <img src="https://img.shields.io/github/actions/workflow/status/toshy/docker-qpdf/security.yml?branch=main&label=Security%20check" alt="Security check" />
     <br /><br />
-    A dockerized version of <a href="https://github.com/qpdf/qpdf">QPDF</a>.
+    <div>A <a href="https://ghcr.io/toshy/docker-qpdf">docker image</a> for <a href="https://github.com/qpdf/qpdf">QPDF</a></div>
 </div>
 
 ## Info
@@ -19,7 +18,7 @@ transformations on PDF files
 ## 🐋 Usage
 
 ```shell
-docker run -it --rm -v $(pwd)/files:/pdf t0shy/qpdf-docker:latest --help
+docker run -it --rm -v $(pwd)/files:/pdf ghcr.io/toshy/docker-qpdf:latest --help
 ```
 
 ```text
@@ -58,10 +57,20 @@ For detailed help, visit the qpdf manual: https://qpdf.readthedocs.io
 Merge PDFs using wildcard character `*`.
 
 ```shell
-docker run -it --rm -v $(pwd)/files:/pdf --entrypoint /bin/sh t0shy/qpdf-docker:latest -c 'qpdf --empty --pages *.pdf -- result.pdf'
+docker run -it --rm -v $(pwd)/files:/pdf --entrypoint /bin/sh ghcr.io/toshy/docker-qpdf:latest -c 'qpdf --empty --pages *.pdf -- result.pdf'
 ```
 
 > Note: Entrypoint is changed to `/bin/sh` and supplying command with `-c`, as wildcard character `*` is interpreted by shell.
+
+## 🛠️ Build
+
+Build docker image from [`docker-bake.hcl`](./docker-bake.hcl) with the `APPLICATION_VERSION` argument the desired QPDF version.
+
+```shell
+docker buildx bake --set *.args.APPLICATION_VERSION=12.2.0
+```
+
+The built image will be available with the default tag `docker-qpdf:local`.
 
 ## ❕ License
 
