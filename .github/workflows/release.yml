@@ -7,6 +7,10 @@ on:
   schedule:
     - cron: '0 3 * * 0'
 
+permissions:
+  contents: read
+  packages: write
+
 env:
   DOCKER_IMAGE: t0shy/qpdf-docker
 

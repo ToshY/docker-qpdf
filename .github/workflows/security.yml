@@ -1,0 +1,32 @@
+name: Security check
+
+on:
+  schedule:
+    - cron: '30 2 * * 0'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  GHCR_SLUG: ghcr.io/toshy/docker-qpdf
+
+jobs:
+  check:
+    name: Image security check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trivy Scan - Unknown, Low, Medium and High Severity
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: ${{ env.GHCR_SLUG }}:latest
+          severity: UNKNOWN,LOW,MEDIUM,HIGH
+          exit-code: 0
+
+      - name: Trivy Scan - Critical Severity
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: ${{ env.GHCR_SLUG }}:latest
+          ignore-unfixed: true
+          severity: CRITICAL
+          exit-code: 1
