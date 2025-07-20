@@ -21,6 +21,10 @@ on:
           - 'true'
           - 'false'
 
+permissions:
+  contents: read
+  packages: write
+
 env:
   GHCR_SLUG: ghcr.io/toshy/docker-qpdf
   APPLICATION_REPOSITORY_OWNER: qpdf
