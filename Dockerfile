@@ -2,7 +2,7 @@ FROM ubuntu:24.04
 
 ARG APPLICATION_VERSION
 
-LABEL maintainer="ToshY <github.com/ToshY>"
+LABEL maintainer="ToshY (github.com/ToshY)"
 
 RUN <<EOT sh
   set -ex
