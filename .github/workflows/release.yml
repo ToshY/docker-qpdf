@@ -38,6 +38,13 @@ jobs:
       IMAGE_EXISTS: ${{ steps.check_image.outputs.IMAGE_EXISTS }}
       APPLICATION_VERSION: ${{ steps.check_image.outputs.LATEST_APPLICATION_VERSION }}
     steps:
+      - name: Skopeo
+        uses: supplypike/setup-bin@v5
+        with:
+          uri: 'https://github.com/lework/skopeo-binary/releases/download/v1.20.0/skopeo-linux-amd64'
+          name: 'skopeo'
+          version: 'v1.20.0'
+
       - name: Check latest release
         id: application_tag
         run: |
@@ -59,12 +66,11 @@ jobs:
 
           echo "Checking if image with tag ${{ env.LATEST_APPLICATION_VERSION }} exists on GHCR."
 
-          ENCODED_TOKEN=$(echo -n "${{ secrets.GITHUB_TOKEN }}" | base64)
-          RESPONSE=$(curl -s -H "Authorization: Bearer ${ENCODED_TOKEN}" https://ghcr.io/v2/${{ env.REGISTRY_IMAGE }}/tags/list)
+          RESPONSE=$(skopeo list-tags "docker://${GHCR_SLUG}" --creds "${GITHUB_ACTOR}:${{ secrets.GITHUB_TOKEN }}")
 
           echo "IMAGE_EXISTS=false" >> $GITHUB_OUTPUT
-          if echo "$RESPONSE" | jq -e '.tags' >/dev/null 2>&1; then
-            TAG_EXISTS=$(echo "$RESPONSE" | jq -r --arg TAG "${{ env.LATEST_APPLICATION_VERSION }}" '.tags[] | select(. == $TAG)')
+          if echo "$RESPONSE" | jq -e '.Tags' >/dev/null 2>&1; then
+            TAG_EXISTS=$(echo "$RESPONSE" | jq -r --arg TAG "${{ env.LATEST_APPLICATION_VERSION }}" '.Tags[] | select(. == $TAG)')
             if [[ -n "$TAG_EXISTS" ]]; then
               if [ "${{ github.event.inputs.FORCE }}" == "true" ]; then
                 echo "Image with tag ${{ env.LATEST_APPLICATION_VERSION }} already exists. Force build step."
