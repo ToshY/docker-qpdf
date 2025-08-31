@@ -17,14 +17,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Trivy Scan - Unknown, Low, Medium and High Severity
-        uses: aquasecurity/trivy-action@0.32.0
+        uses: aquasecurity/trivy-action@0.33.0
         with:
           image-ref: ${{ env.GHCR_SLUG }}:latest
           severity: UNKNOWN,LOW,MEDIUM,HIGH
           exit-code: 0
 
       - name: Trivy Scan - Critical Severity
-        uses: aquasecurity/trivy-action@0.32.0
+        uses: aquasecurity/trivy-action@0.33.0
         with:
           image-ref: ${{ env.GHCR_SLUG }}:latest
           ignore-unfixed: true
