@@ -48,7 +48,14 @@ jobs:
       - name: Check latest release
         id: application_tag
         run: |
-          APPLICATION_TAG=$(curl -s https://github.com/${{ env.APPLICATION_REPOSITORY_OWNER }}/${{ env.APPLICATION_REPOSITORY_SLUG }}/tags | grep '/${{ env.APPLICATION_REPOSITORY_SLUG }}/archive/refs/tags/' | grep '.zip' | head -n 1 | sed -n 's/.*refs\/tags\/v\(.*\)\.zip".*/\1/p')
+          APPLICATION_TAG=$(
+            curl -s https://github.com/${{ env.APPLICATION_REPOSITORY_OWNER }}/${{ env.APPLICATION_REPOSITORY_SLUG }}/tags \
+              | grep '/${{ env.APPLICATION_REPOSITORY_SLUG }}/archive/refs/tags/' \
+              | grep '.zip' \
+              | sed -n 's/.*refs\/tags\/v\(.*\)\.zip".*/\1/p' \
+              | grep -E '^[0-9]+\.[0-9]+\.[0-9]+([-.][0-9A-Za-z.-]+)?$' \
+              | head -n 1
+          )
           echo "Latest application tag: $APPLICATION_TAG"
           echo "LATEST_APPLICATION_VERSION=$APPLICATION_TAG" >> $GITHUB_ENV
           echo "REGISTRY_IMAGE=${GHCR_SLUG#ghcr.io/}" >> $GITHUB_ENV
